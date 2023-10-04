@@ -9,6 +9,23 @@ const sequelize = new Sequelize(config.db.database, config.db.user, config.db.pa
   dialect: 'mysql'
 });
 
+/**
+ * Register all assosiations
+ */
+let modelsArr = [];
+fs
+  .readdirSync(__dirname + "\\models")
+  .forEach(file => {
+    const model = require(`./models/${file}`)(sequelize, Sequelize.DataTypes);
+    modelsArr[model.name] = model;
+  });
+ console.log(modelsArr)
+Object.keys(modelsArr).forEach(modelName => {
+  if (modelsArr[modelName].associate) {
+    modelsArr[modelName].associate(modelsArr);
+  }
+});
+
 sequelize.authenticate()
   .then(() => console.log('Connection has been established'))
   .catch((error) => console.error('Unable to connect to the database:', error))
