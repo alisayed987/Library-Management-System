@@ -19,8 +19,8 @@ module.exports = {
           key: "id"
         }
       },
-      isbn: {
-        type: Sequelize.STRING
+      isbn10: {
+        type: Sequelize.STRING(10)
       },
       availableQuantity: {
         type: Sequelize.INTEGER

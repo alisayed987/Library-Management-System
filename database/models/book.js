@@ -20,8 +20,12 @@ module.exports = (sequelize, DataTypes) => {
         key: "id"
       }
     },
-    isbn: {
-      type: DataTypes.STRING
+    isbn10: {
+      type: DataTypes.STRING(10),
+      unique: true,
+      validate: {
+        len: 10
+      }
     },
     availableQuantity: {
       type: DataTypes.INTEGER
