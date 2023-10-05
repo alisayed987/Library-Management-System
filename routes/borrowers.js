@@ -16,6 +16,20 @@ module.exports = (sequelize) => {
 
   router.post('/', async (req, res) => {
     try {
+      /**
+       * Check if there is a book already with the same ISBN
+       */
+      const fountBorrower = Borrower.findOne({
+        where: {
+          email: req.body.email
+        }
+      });
+
+      if (fountBorrower) {
+        res.status(200).send("borrower already exists");
+        return;
+      }
+
       const borrower = await Borrower.create(req.body)
       borrower.save();
       res.status(201).send(borrower);

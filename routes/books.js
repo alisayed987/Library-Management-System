@@ -44,6 +44,19 @@ module.exports = (sequelize) => {
 
   router.post('/', async (req, res) => {
     try {
+      /**
+       * Check if there is a book already with the same ISBN
+       */
+      const foundBook = Book.findOne({
+        where: {
+          isbn10: req.body.isbn10
+        }
+      });
+
+      if (foundBook) {
+        res.status(200).send("book already exists");
+        return;
+      }
       const book = await Book.create(req.body)
       book.save();
       res.status(201).send(book);

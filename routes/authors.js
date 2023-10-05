@@ -16,6 +16,20 @@ module.exports = (sequelize) => {
 
   router.post('/', async (req, res) => {
     try {
+      /**
+       * Check if there is a author already with the same Name
+       */
+      const foundAuthor = Author.findOne({
+        where: {
+          name: req.body.name
+        }
+      });
+
+      if (foundAuthor) {
+        res.status(200).send("author already exists");
+        return;
+      }
+
       const author = await Author.create(req.body)
       author.save();
       res.status(201).send(author);
