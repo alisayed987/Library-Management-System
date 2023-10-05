@@ -1,11 +1,39 @@
 const express = require('express');
 const router = express.Router();
 
+const { Op } = require("sequelize");
+
 module.exports = (sequelize) => {
   const Book = sequelize.models.Book;
 
   router.get('/', async (req, res) => {
-    const books = await Book.findAll();
+    let filters = req.query;
+    let authorName = {};
+    let booksQueryConditions = {};
+    /**
+     * Available books filter keys
+     */
+    if (filters) {
+      if (filters['isbn']) booksQueryConditions.isbn10 = filters['isbn'];
+      // NOTE:: titleLike must be before title because if we recieve both title should override titleLike
+      if (filters['titleLike']) booksQueryConditions.title = {[Op.substring]: filters['titleLike']};
+      if (filters['title']) booksQueryConditions.title = filters['title'];
+
+      // NOTE:: authorLike must be author title because if we recieve both author should override authorLike
+      if (filters['authorLike']) authorName.name = {[Op.substring]: filters['authorLike']};
+      if (filters['author']) authorName.name = filters['author'];
+    }
+
+    const books = await Book.findAll({
+      where: booksQueryConditions,
+      include: [
+        {
+          model: sequelize.models.Author,
+          where: authorName
+        }
+      ]
+    });
+
     res.send(books);
   });
 
