@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.STRING(10)
       },
       availableQuantity: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER.UNSIGNED
       },
       shelfLocation: {
         type: Sequelize.STRING

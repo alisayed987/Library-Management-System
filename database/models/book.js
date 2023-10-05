@@ -28,7 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     availableQuantity: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      validate: {
+        min: 0
+      }
     },
     shelfLocation: {
       type: DataTypes.STRING
