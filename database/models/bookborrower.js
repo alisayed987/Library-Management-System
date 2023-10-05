@@ -30,8 +30,9 @@ module.exports = (sequelize, DataTypes) => {
     to: {
       type: DataTypes.DATE
     },
-    returned: {
-      type: DataTypes.BOOLEAN
+    returnedAt: {
+      allowNull: true,
+      type: DataTypes.DATE
     },
   }, {
     sequelize,
