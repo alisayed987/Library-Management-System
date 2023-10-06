@@ -1,4 +1,5 @@
 'use strict';
+const moment = require('moment');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -6,38 +7,38 @@ module.exports = {
     await queryInterface.bulkInsert('borrowers', [{
       name: "borrower1",
       email: "borrower1@gmail.com",
-      createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
     },
     {
       name: "borrower2",
       email: "borrower2@gmail.com",
-      createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
     },
     {
       name: "borrower3",
       email: "borrower3@gmail.com",
-      createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
     },
     {
       name: "borrower4",
       email: "borrower4@gmail.com",
-      createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
     },
     {
       name: "borrower5",
       email: "borrower5@gmail.com",
-      createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
     },
     {
       name: "borrower6",
       email: "borrower6@gmail.com",
-      createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
     }]);
   },
 

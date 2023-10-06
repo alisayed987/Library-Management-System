@@ -1,17 +1,18 @@
 'use strict';
+const moment = require('moment');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('authors', [{
       name: 'Ali',
-      createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
     },
     {
       name: 'Sayed',
-      createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
     }]);
   },
 
