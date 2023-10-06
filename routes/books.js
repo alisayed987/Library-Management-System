@@ -1,11 +1,20 @@
 const express = require('express');
 const router = express.Router();
+const moment = require('moment')
 
 const { Op } = require("sequelize");
 
 module.exports = (sequelize) => {
   const Book = sequelize.models.Book;
+  const BookBorrower = sequelize.models.BookBorrower;
 
+  /**
+   * GET all books || filtered books
+   * 
+   * Available filters keys (query string):
+   *  - books -> [isbn, titleLike, title]
+   *  - author -> [authorLike, author]
+   */
   router.get('/', async (req, res) => {
     let filters = req.query;
     let authorName = {};
@@ -37,11 +46,35 @@ module.exports = (sequelize) => {
     res.send(books);
   });
 
+  /**
+   * GET all overdued borrowed books
+   */
+  router.get('/overdue', async (req, res) => {
+    const overduedBooks = await BookBorrower.findAll({
+      include: [
+        {
+          model: sequelize.models.Book,
+        }
+      ],
+      where: {
+        returnedAt: { [Op.is]: null },
+        to: { [Op.lt]: moment() }
+      }
+    });
+    res.send(overduedBooks);
+  });
+
+  /**
+   * GET a book by id
+   */
   router.get('/:id', async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     res.send(book);
   });
 
+  /**
+   * CREATE book if does not exist (unique isbn)
+   */
   router.post('/', async (req, res) => {
     try {
       /**
@@ -65,6 +98,9 @@ module.exports = (sequelize) => {
     }
   });
 
+  /**
+   * UPDATE a book by id
+   */
   router.put('/:id', async (req, res) => {
     try {
       const updated = await Book.update(
@@ -80,6 +116,9 @@ module.exports = (sequelize) => {
     }
   });
 
+  /**
+   * DELETE a book by id
+   */
   router.delete('/:id', async (req, res) => {
     try {
       const deleted = await Book.destroy({
