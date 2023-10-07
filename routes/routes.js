@@ -4,6 +4,8 @@ const books = require('./books');
 const borrowers = require('./borrowers');
 const processes = require('./processes');
 
+const error = require('../middlewares/error');
+
 module.exports = function (app, sequelize) {
     app.use(express.json());
     app.use(
@@ -16,4 +18,6 @@ module.exports = function (app, sequelize) {
     app.use('/api/books', books(sequelize));
     app.use('/api/borrowers', borrowers(sequelize));
     app.use('/api/processes', processes(sequelize));
+
+    app.use(error)
 }

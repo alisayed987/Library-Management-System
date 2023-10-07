@@ -19,7 +19,7 @@ fs
     const model = require(`./models/${file}`)(sequelize, Sequelize.DataTypes);
     modelsArr[model.name] = model;
   });
- console.log(modelsArr)
+
 Object.keys(modelsArr).forEach(modelName => {
   if (modelsArr[modelName].associate) {
     modelsArr[modelName].associate(modelsArr);
