@@ -19,7 +19,6 @@ module.exports = (sequelize, DataTypes) => {
         const token = jwt.sign({ id: this.id }, process.env.SECRET);
         return token;
       } catch (error) {
-        console.log(error);
         throw new Error('Error generating JWT: ', error.message);
       }
     }

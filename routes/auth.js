@@ -18,7 +18,6 @@ module.exports = (sequelize) => {
     if (!validPassword) return res.status(400).send('Invalid email or password.');
 
     const token = borrower.generateAuthToken();
-    console.log('login: ', token);
     res.send(token);
   });
 
