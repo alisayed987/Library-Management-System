@@ -20,6 +20,7 @@ module.exports = {
         }
       },
       isbn10: {
+        allowNull: false,
         type: Sequelize.STRING(10)
       },
       availableQuantity: {
