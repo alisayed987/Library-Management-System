@@ -13,6 +13,9 @@ module.exports = (sequelize) => {
      * Options:
      *  - Export all borrowing processes between a perion
      *  - Export all overdue borrowing process that has happened or is still happening between a period
+     *
+     *  Available filters keys (query string):
+     *  bookborrower -> [from , to, overdue(boolean)]
      */
     router.get('/generateReport', async (req, res) => {
         let filters = req.query;
@@ -32,7 +35,7 @@ module.exports = (sequelize) => {
             if (filters['from']) queryConditions.from = { [Op.gt]: moment(filters['from']) };
             if (filters['to']) queryConditions.to = { [Op.lt]: moment(filters['to']) };
             
-            if (filters['overdue'] === true) {
+            if (filters['overdue'] === 'true') {
                 queryConditions = {
                     ...queryConditions,
                     ...pastOverdueConditions
