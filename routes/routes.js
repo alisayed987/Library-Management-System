@@ -4,6 +4,7 @@ const books = require('./books');
 const borrowers = require('./borrowers');
 const processes = require('./processes');
 
+const limiter = require('../middlewares/rate-limiter');
 const error = require('../middlewares/error');
 
 module.exports = function (app, sequelize) {
@@ -14,6 +15,7 @@ module.exports = function (app, sequelize) {
         })
     );
     
+    app.use(limiter);
     app.use('/api/authors', authors(sequelize));
     app.use('/api/books', books(sequelize));
     app.use('/api/borrowers', borrowers(sequelize));
