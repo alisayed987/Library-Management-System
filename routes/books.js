@@ -12,8 +12,8 @@ module.exports = (sequelize) => {
    * GET all books || filtered books
    * 
    * Available filters keys (query string):
-   *  - books -> [isbn, titleLike, title]
-   *  - author -> [authorLike, author]
+   *  - books -> [isbn, titleLike, title, authorId]
+   *  - author -> [authorNameLike, authorName]
    */
   router.get('/', async (req, res) => {
     let filters = req.query;
@@ -27,10 +27,15 @@ module.exports = (sequelize) => {
       // NOTE:: titleLike must be before title because if we recieve both title should override titleLike
       if (filters['titleLike']) booksQueryConditions.title = { [Op.substring]: filters['titleLike'] };
       if (filters['title']) booksQueryConditions.title = filters['title'];
+      if (filters['authorId']) booksQueryConditions.authorId = filters['authorId'];
 
       // NOTE:: authorLike must be author title because if we recieve both author should override authorLike
-      if (filters['authorLike']) authorName.name = { [Op.substring]: filters['authorLike'] };
-      if (filters['author']) authorName.name = filters['author'];
+      if (filters['authorNameLike']) authorName.name = { [Op.substring]: filters['authorNameLike'] };
+      
+      // (for performance) If "Id" set no need to filter by name if set;
+      if (!filters['authorId']) {
+        if (filters['authorName']) authorName.name = filters['authorName'];
+      } 
     }
 
     const books = await Book.findAll({
