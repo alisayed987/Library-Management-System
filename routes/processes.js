@@ -14,14 +14,10 @@ module.exports = (sequelize) => {
      * Expected keys: [isbn, borrowerId || borrowerEmail, to]
      */
     router.post("/checkOutBook", async (req, res) => {
-        try {
-            let borrowerId = req.body?.borrowerId || await getBorrowerIdByEmail( req.body.borrowerEmail);
-            let book = await getAvailableBook(req.body.isbn);
-            await borrowBook(book, borrowerId, req.body.to);
-            res.status(200).send("book Borrowed successfully");
-        } catch (error) {
-            res.status(400).send(error.message);
-        }
+        let borrowerId = req.body?.borrowerId || await getBorrowerIdByEmail(req.body.borrowerEmail);
+        let book = await getAvailableBook(req.body.isbn);
+        await borrowBook(book, borrowerId, req.body.to);
+        res.status(200).send("book Borrowed successfully");
     })
 
     /**
@@ -29,13 +25,9 @@ module.exports = (sequelize) => {
      * Expected keys: [isbn, borrowerId || borrowerEmail]
      */
     router.post("/returnBook", async (req, res) => {
-        try {
-            let borrowerId = req.body?.borrowerId || await getBorrowerIdByEmail( req.body.borrowerEmail);
-            await returnBook(req.body.isbn, borrowerId)
-            res.status(200).send("book returned successfully");
-        } catch (error) {
-            res.status(400).send(error.message);
-        }
+        let borrowerId = req.body?.borrowerId || await getBorrowerIdByEmail(req.body.borrowerEmail);
+        await returnBook(req.body.isbn, borrowerId)
+        res.status(200).send("book returned successfully");
     })
 
     //------------------<Actions>---------------------------
@@ -53,7 +45,7 @@ module.exports = (sequelize) => {
                 }
             }
         });
-        
+
         if (!book) {
             throw new Error("Book not available.")
         }
@@ -114,15 +106,15 @@ module.exports = (sequelize) => {
                     isbn10: isbn
                 }
             });
-    
+
             await BookBorrower.update({
-                    returnedAt: moment().format('YYYY-MM-DD HH:mm:ss')
-                }, {
-                    where: {
-                        bookId: book.id,
-                        borrowerId: borrowerId
-                    }
-                });
+                returnedAt: moment().format('YYYY-MM-DD HH:mm:ss')
+            }, {
+                where: {
+                    bookId: book.id,
+                    borrowerId: borrowerId
+                }
+            });
             book.availableQuantity += 1;
             await book.save();
         } catch (error) {

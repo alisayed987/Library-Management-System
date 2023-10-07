@@ -25,11 +25,11 @@ module.exports = (sequelize) => {
     if (filters) {
       if (filters['isbn']) booksQueryConditions.isbn10 = filters['isbn'];
       // NOTE:: titleLike must be before title because if we recieve both title should override titleLike
-      if (filters['titleLike']) booksQueryConditions.title = {[Op.substring]: filters['titleLike']};
+      if (filters['titleLike']) booksQueryConditions.title = { [Op.substring]: filters['titleLike'] };
       if (filters['title']) booksQueryConditions.title = filters['title'];
 
       // NOTE:: authorLike must be author title because if we recieve both author should override authorLike
-      if (filters['authorLike']) authorName.name = {[Op.substring]: filters['authorLike']};
+      if (filters['authorLike']) authorName.name = { [Op.substring]: filters['authorLike'] };
       if (filters['author']) authorName.name = filters['author'];
     }
 
@@ -76,66 +76,54 @@ module.exports = (sequelize) => {
    * CREATE book if does not exist (unique isbn)
    */
   router.post('/', async (req, res) => {
-    try {
-      /**
-       * Check if there is a book already with the same ISBN
-       */
-      const foundBook = await Book.findOne({
-        where: {
-          isbn10: req.body.isbn10
-        }
-      });
-
-      if (foundBook) {
-        res.status(200).send("book already exists");
-        return;
+    /**
+     * Check if there is a book already with the same ISBN
+     */
+    const foundBook = await Book.findOne({
+      where: {
+        isbn10: req.body.isbn10
       }
-      const book = await Book.create(req.body)
-      book.save();
-      res.status(201).send(book);
-    } catch (error) {
-      res.status(400).send(error.message)
+    });
+
+    if (foundBook) {
+      res.status(200).send("book already exists");
+      return;
     }
+    const book = await Book.create(req.body)
+    book.save();
+    res.status(201).send(book);
   });
 
   /**
    * UPDATE a book by id
    */
   router.put('/:id', async (req, res) => {
-    try {
-      const updated = await Book.update(
-        req.body,
-        {
-          where: {
-            id: req.params.id
-          }
-        });
-      res.status(202).send(updated);
-    } catch (error) {
-      res.status(400).send(error.message)
-    }
+    const updated = await Book.update(
+      req.body,
+      {
+        where: {
+          id: req.params.id
+        }
+      });
+    res.status(202).send(updated);
   });
 
   /**
    * DELETE a book by id
    */
   router.delete('/:id', async (req, res) => {
-    try {
-      const deleted = await Book.destroy({
-        where: {
-          id: req.params.id
-        }
-      });
-
-      if (!deleted) {
-        res.status(404).send("No matching id to delete");
-        return;
+    const deleted = await Book.destroy({
+      where: {
+        id: req.params.id
       }
+    });
 
-      res.status(200).send("Deleted");
-    } catch (error) {
-      res.status(400).send(error.message)
+    if (!deleted) {
+      res.status(404).send("No matching id to delete");
+      return;
     }
+
+    res.status(200).send("Deleted");
   });
 
   return router;
