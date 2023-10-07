@@ -1,4 +1,5 @@
 const express = require('express');
+const auth = require('../middlewares/auth');
 const router = express.Router();
 
 module.exports = (sequelize) => {
@@ -23,7 +24,7 @@ module.exports = (sequelize) => {
   /**
    * CREATE an author if doesn't exist (unique name)
    */
-  router.post('/', async (req, res) => {
+  router.post('/', auth, async (req, res) => {
     /**
      * Check if there is a author already with the same Name
      */
@@ -46,7 +47,7 @@ module.exports = (sequelize) => {
   /**
    * UPDATE author by id
    */
-  router.put('/:id', async (req, res) => {
+  router.put('/:id', auth, async (req, res) => {
     const updated = await Author.update(
       req.body,
       {
@@ -60,7 +61,7 @@ module.exports = (sequelize) => {
   /**
    * DELETE author by id
    */
-  router.delete('/:id', async (req, res) => {
+  router.delete('/:id', auth, async (req, res) => {
     const deleted = await Author.destroy({
       where: {
         id: req.params.id
