@@ -80,7 +80,7 @@ module.exports = (sequelize) => {
       /**
        * Check if there is a book already with the same ISBN
        */
-      const foundBook = Book.findOne({
+      const foundBook = await Book.findOne({
         where: {
           isbn10: req.body.isbn10
         }

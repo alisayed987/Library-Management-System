@@ -52,7 +52,7 @@ module.exports = (sequelize) => {
       /**
        * Check if there is a book already with the same ISBN
        */
-      const fountBorrower = Borrower.findOne({
+      const fountBorrower = await Borrower.findOne({
         where: {
           email: req.body.email
         }
