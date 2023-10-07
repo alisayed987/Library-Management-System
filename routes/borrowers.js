@@ -11,7 +11,9 @@ module.exports = (sequelize) => {
    * GET all borowers
    */
   router.get('/', async (req, res) => {
-    const borrowers = await Borrower.findAll();
+    const borrowers = await Borrower.findAll({
+      attributes: ['id', 'name', 'email']
+    });
     res.send(borrowers);
   });
 
@@ -19,7 +21,9 @@ module.exports = (sequelize) => {
    * GET a borrower by id
    */
   router.get('/:id', async (req, res) => {
-    const borrower = await Borrower.findByPk(req.params.id);
+    const borrower = await Borrower.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'email']
+    });
     res.send(borrower);
   });
 
@@ -34,6 +38,7 @@ module.exports = (sequelize) => {
         },
         {
           model: sequelize.models.Borrower,
+          attributes: ['id', 'name', 'email']
         }
       ],
       where: {
@@ -64,7 +69,7 @@ module.exports = (sequelize) => {
 
     const borrower = await Borrower.create(req.body)
     borrower.save();
-    res.status(201).send(borrower);
+    res.status(201).send(_.pick(borrower, ['id', 'name', 'email']));
   });
 
   /**

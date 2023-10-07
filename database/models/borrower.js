@@ -19,7 +19,11 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isEmail: true,
         notEmpty: true
-      }
+      },
+    },
+    password: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
     }
   }, {
     sequelize,
