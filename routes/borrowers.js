@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middlewares/auth');
+const _ = require('lodash')
 
 const { Op } = require("sequelize");
 
@@ -11,7 +13,9 @@ module.exports = (sequelize) => {
    * GET all borowers
    */
   router.get('/', async (req, res) => {
-    const borrowers = await Borrower.findAll();
+    const borrowers = await Borrower.findAll({
+      attributes: ['id', 'name', 'email']
+    });
     res.send(borrowers);
   });
 
@@ -19,7 +23,9 @@ module.exports = (sequelize) => {
    * GET a borrower by id
    */
   router.get('/:id', async (req, res) => {
-    const borrower = await Borrower.findByPk(req.params.id);
+    const borrower = await Borrower.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'email']
+    });
     res.send(borrower);
   });
 
@@ -34,6 +40,7 @@ module.exports = (sequelize) => {
         },
         {
           model: sequelize.models.Borrower,
+          attributes: ['id', 'name', 'email']
         }
       ],
       where: {
@@ -47,7 +54,7 @@ module.exports = (sequelize) => {
   /**
    * CREATE borrower if does not exist (unique email)
    */
-  router.post('/', async (req, res) => {
+  router.post('/', auth, async (req, res) => {
     /**
      * Check if there is a book already with the same ISBN
      */
@@ -64,13 +71,13 @@ module.exports = (sequelize) => {
 
     const borrower = await Borrower.create(req.body)
     borrower.save();
-    res.status(201).send(borrower);
+    res.status(201).send(_.pick(borrower, ['id', 'name', 'email']));
   });
 
   /**
    * UPDATE a borrower by id
    */
-  router.put('/:id', async (req, res) => {
+  router.put('/:id', auth, async (req, res) => {
     const updated = await Borrower.update(
       req.body,
       {
@@ -84,7 +91,7 @@ module.exports = (sequelize) => {
   /**
    * DELETE a borrower by id
    */
-  router.delete('/:id', async (req, res) => {
+  router.delete('/:id', auth, async (req, res) => {
     const deleted = await Borrower.destroy({
       where: {
         id: req.params.id

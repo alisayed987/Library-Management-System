@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment')
+const auth = require('../middlewares/auth');
 
 const { Op } = require("sequelize");
 
@@ -80,7 +81,7 @@ module.exports = (sequelize) => {
   /**
    * CREATE book if does not exist (unique isbn)
    */
-  router.post('/', async (req, res) => {
+  router.post('/', auth, async (req, res) => {
     /**
      * Check if there is a book already with the same ISBN
      */
@@ -102,7 +103,7 @@ module.exports = (sequelize) => {
   /**
    * UPDATE a book by id
    */
-  router.put('/:id', async (req, res) => {
+  router.put('/:id', auth, async (req, res) => {
     const updated = await Book.update(
       req.body,
       {
@@ -116,7 +117,7 @@ module.exports = (sequelize) => {
   /**
    * DELETE a book by id
    */
-  router.delete('/:id', async (req, res) => {
+  router.delete('/:id', auth, async (req, res) => {
     const deleted = await Book.destroy({
       where: {
         id: req.params.id

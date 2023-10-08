@@ -2,10 +2,25 @@
 const {
   Model
 } = require('sequelize');
+const jwt = require('jsonwebtoken');
+
 module.exports = (sequelize, DataTypes) => {
   class Borrower extends Model {
     static associate(models) {
       this.belongsToMany(models.Book, { through: models.BookBorrower })
+    }
+
+    /**
+     * Generate token for current user using id
+     * @returns string
+     */
+    generateAuthToken() {
+      try {
+        const token = jwt.sign({ id: this.id }, process.env.SECRET);
+        return token;
+      } catch (error) {
+        throw new Error('Error generating JWT: ', error.message);
+      }
     }
   }
   Borrower.init({
@@ -19,7 +34,11 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isEmail: true,
         notEmpty: true
-      }
+      },
+    },
+    password: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
     }
   }, {
     sequelize,

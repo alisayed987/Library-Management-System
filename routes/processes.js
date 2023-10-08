@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment');
 const { Op } = require("sequelize");
+const auth = require('../middlewares/auth');
 
 module.exports = (sequelize) => {
     const Book = sequelize.models.Book;
@@ -13,7 +14,7 @@ module.exports = (sequelize) => {
      * Borrowing book process
      * Expected keys: [isbn, borrowerId || borrowerEmail, to]
      */
-    router.post("/checkOutBook", async (req, res) => {
+    router.post("/checkOutBook", auth, async (req, res) => {
         let borrowerId = req.body?.borrowerId || await getBorrowerIdByEmail(req.body.borrowerEmail);
         let book = await getAvailableBook(req.body.isbn);
         await borrowBook(book, borrowerId, req.body.to);
@@ -24,7 +25,7 @@ module.exports = (sequelize) => {
      * Returning borrowed book process
      * Expected keys: [isbn, borrowerId || borrowerEmail]
      */
-    router.post("/returnBook", async (req, res) => {
+    router.post("/returnBook", auth, async (req, res) => {
         let borrowerId = req.body?.borrowerId || await getBorrowerIdByEmail(req.body.borrowerEmail);
         await returnBook(req.body.isbn, borrowerId)
         res.status(200).send("book returned successfully");
